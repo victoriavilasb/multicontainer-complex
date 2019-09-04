@@ -1,0 +1,24 @@
+sudo: required
+services: 
+  - docker
+
+before_install: 
+  - docker build -t victoriaovilas/multicontainer-complex -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run victoriaovilas/multicontainer-complex npm test -- --coverage
+
+after_success:
+  - docker build -t victoriaovilas/multi-client ./client
+  - docker build -t victoriaovilas/multi-ngixn ./nginx
+  - docker build -t victoriaovilas/multi-server ./server
+  - docker build -t victoriaovilas/multi-worker ./worker
+  #Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password+-stdin
+  - docker push victoriaovilas/multi-client
+  - docker push victoriaovilas/multi-ngixn
+  - docker push victoriaovilas/multi-server
+  - docker push victoriaovilas/multi-worker
+
+  #take those images and push them to docker hub
+  

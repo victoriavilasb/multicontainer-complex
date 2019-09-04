@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+        "name": "client",
+        "image": "victoriaovilas/multi-client",
+        "hostname": "client",
+        "essential": false
+    },
+    {
+        "name": "server",
+        "image": "victoriaovilas/multi-server",
+        "hostname": "api",
+        "essential": false
+    },
+    {
+        "name": "worker",
+        "image": "victoriaovilas/worker",
+        "hostname": "worker",
+        "essential": false
+    },
+    {
+        "name": "nginx",
+        "image": "victoriaovilas/multi-nginx",
+        "hostname": "nginx",
+        "essential": true,
+        "portMappings": [
+            {
+                "hostPort": 80,
+                "containerPort": 80
+            }
+        ],
+        "links": ["client", "server"]
+    }
+  ]
+}
